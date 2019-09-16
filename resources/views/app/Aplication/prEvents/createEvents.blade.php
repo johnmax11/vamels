@@ -302,7 +302,7 @@
                 }
             </script>
 
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA65D_GCLiEOKohC5hryRxlz5s5e_KukDk&callback=initMap" async defer></script>
+            <script src="" async defer></script>
         </div>
         <div class="modal-footer">
             <a href="javascript:void(0)" class="modal-action modal-close waves-effect waves-green btn-flat ">Cerrar</a>
