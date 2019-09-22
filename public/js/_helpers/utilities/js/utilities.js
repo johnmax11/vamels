@@ -361,6 +361,53 @@ jQuery.extend({
      * 
      * @returns {String}
      */
+    sy_getHtmlPreload : function(){
+        return ''+
+            '<div class="preloader-wrapper big active">'+
+                '<div class="spinner-layer spinner-blue">'+
+                  '<div class="circle-clipper left">'+
+                    '<div class="circle"></div>'+
+                  '</div><div class="gap-patch">'+
+                    '<div class="circle"></div>'+
+                  '</div><div class="circle-clipper right">'+
+                    '<div class="circle"></div>'+
+                  '</div>'+
+                '</div>'+
+                '<div class="spinner-layer spinner-red">'+
+                  '<div class="circle-clipper left">'+
+                    '<div class="circle"></div>'+
+                  '</div><div class="gap-patch">'+
+                    '<div class="circle"></div>'+
+                  '</div><div class="circle-clipper right">'+
+                    '<div class="circle"></div>'+
+                  '</div>'+
+                '</div>'+
+                '<div class="spinner-layer spinner-yellow">'+
+                  '<div class="circle-clipper left">'+
+                    '<div class="circle"></div>'+
+                  '</div><div class="gap-patch">'+
+                    '<div class="circle"></div>'+
+                  '</div><div class="circle-clipper right">'+
+                    '<div class="circle"></div>'+
+                  '</div>'+
+                '</div>'+
+                '<div class="spinner-layer spinner-green">'+
+                  '<div class="circle-clipper left">'+
+                    '<div class="circle"></div>'+
+                  '</div><div class="gap-patch">'+
+                    '<div class="circle"></div>'+
+                  '</div><div class="circle-clipper right">'+
+                    '<div class="circle"></div>'+
+                  '</div>'+
+                '</div>'+
+            '</div>'+
+        '';
+    },
+    
+    /**
+     * 
+     * @returns {String}
+     */
     sy_getHtmlPreloadWin10 : function(str){
         return ''+
             '<style>'+
@@ -1443,7 +1490,7 @@ jQuery.extend({
             
             /**creamos el esqueleto de la tabla*/
             if(args.createTable){
-                $(args.target).html($.sy_getTableDataTable(args.id));
+                $(args.target).html($.sy_getTableDataTable(args.id,args.footerTotal,args.columns));
                 /**agregamos las columans al thead*/
                 if(args.columns.length>0){
                     $('#thead-'+args.id).html($.sy_getHtmlColTh(args.columns,false,args.actions));
@@ -1475,11 +1522,11 @@ jQuery.extend({
                         }
                         // verificamos si hay configuracion personalizada
                         if(typeof (cellData) == 'object'){
-                            $.sy_setConfigObj(td,cellData);
+                            $.sy_setConfigObj(td,cellData, row, col);
                         }
                         // verificamos si hay eventos desde javascript
                         if(args.actions[col] != undefined){
-                            $.sy_setEventInCell($(td),args.actions,{target:$(td),rowData:rowData,row:row,col:col,dt:$('#tbl-'+args.id).dataTable()});
+                            $.sy_setEventInCell($(td),args.actions,{target:$(td),rowData:rowData,row:row,col:col,dt:$('#tbl-'+args.id).dataTable(),cellData:cellData});
                         }   
                     }
                 }],
@@ -1500,7 +1547,8 @@ jQuery.extend({
                         "next":"Siguiente",
                         "previous":"Anterior"
                     }
-                }
+                },
+                "footerCallback":(args.footerTotal.length>0?$.sy_getCallBackTotal(args.footerTotal):null)
             };
             /**creamos el data table*/
             objDt = $('#tbl-'+args.id).dataTable(optJson);
@@ -1518,6 +1566,10 @@ jQuery.extend({
             });
             // creamos el html del div navegacion
             $('#divPlusDtTmp-'+args.id).after(
+                /*'<span class="dataTables_length">'+
+                '   <div id="divOcultoMenu" class=" navbar-left sidebar-collapse hide-on-large-only" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" style="float:left!important;margin-bottom: 0px !important;margin-right: 0px !important;margin-top: 0px !important;padding: 0px 0px; !important">'+                
+                '   </div>'+
+                '</span>'+*/
                 '<span class="dataTables_length collapse navbar-collapse">'+
                 '   <div id="divVisibleMenu-'+args.id+'" class="nav navbar-nav navbar-left">'+
                 '   </div>'+
@@ -1552,13 +1604,59 @@ jQuery.extend({
     },
     
     /**
+     * get el callback en footer
+     * 
+     * @param {type} footerTotal
+     * @returns {Function}
+     */
+    sy_getCallBackTotal : function(footerTotal){
+        return function ( row, data, start, end, display ) {
+            
+            var api = this.api(), data;
+            
+            // recorremos los totala footer
+            for(var k=0;k<footerTotal.length;k++){
+ 
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                // Total over all pages
+                total = api
+                    .column( footerTotal[k][0] )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+ 
+                // Total over this page
+                pageTotal = api
+                    .column( footerTotal[k][0], { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+
+                // Update footer
+                $( api.column( footerTotal[k][0] ).footer() ).html(
+                    footerTotal[k][2]+$.sy_number_format(pageTotal) +' ( '+footerTotal[k][2]+ $.sy_number_format(total) +' total)'
+                );
+            } // fin for footer total
+        }
+    },
+    
+    /**
      * agrega parametros personzalidos al row o la col
      * 
      * @param {type} td
      * @param {type} cellData
      * @returns {undefined}
      */
-    sy_setConfigObj : function(td,cellData){
+    sy_setConfigObj : function(td,cellData, row, col){
         if(cellData!=null){
             $.each(cellData,function(key,value){
                 if(key == 'row'){
@@ -1568,10 +1666,18 @@ jQuery.extend({
                                 $(td).parent().css(key_3,value_3);
                             });
                         }
+                        if(key_2 == 'value'){
+                            $(td).html(value_2);
+                        }
                     });
                 }
                 if(key == 'col'){
-
+                    if(col == value.number){
+                        $.each(value.style,function(key_3,value_3){
+                            $(td).css(key_3,value_3);
+                        });
+                        $(td).html(value.value);
+                    }
                 }
             });
         }
@@ -1586,6 +1692,7 @@ jQuery.extend({
         $('#bttnPlusS-'+idDt).remove();
         $('#bttnPlusH-'+idDt).remove();
         $('#divVisibleMenu-'+idDt).append("<span class='dataTables_length'><a id='bttnPlusS-"+idDt+"' href='create' class='btn "+classLocation+" waves-effect waves-light'>Crear <i class='material-icons left'>note_add</i></a><span> &nbsp;&nbsp;&nbsp; </span>");
+        $('#divOcultoMenu').append("<span class='dataTables_length'><a id='bttnPlusH-"+idDt+"'  href='create' class='btn btn-"+classLocation+" btn-xs'><i class='material-icons left'>note_add</i></a><span> &nbsp;&nbsp;&nbsp; </span>");
         //objRpl.remove();
         // set evento click
         $("#bttnPlusS-"+idDt+",#bttnPlusH-"+idDt).click(function(){
@@ -1614,6 +1721,7 @@ jQuery.extend({
         $('#bttnListS-'+idDt).remove();
         $('#bttnListH-'+idDt).remove();
         $('#divVisibleMenu-'+idDt).append("<span class='dataTables_length'><a id='bttnListS-"+idDt+"' href='' class='btn "+classLocation+" waves-effect waves-light'>Listar <i class='material-icons left'>list</i></a><span> &nbsp;&nbsp;&nbsp; </span>");
+        $('#divOcultoMenu').append("<span class='dataTables_length'><a id='bttnListH-"+idDt+"'  href='' class='btn btn-"+classLocation+" btn-xs'><i class='material-icons left'>list</i></a><span> &nbsp;&nbsp;&nbsp; </span>");
         //objRpl.remove();
         // set evento click
         $("#bttnListS-"+idDt+",#bttnListH-"+idDt).click(function(){
@@ -1744,7 +1852,12 @@ jQuery.extend({
                                 //set eventos al obj
                                 switch(index_2){
                                     case "_icon":
-                                        $(objTarget).attr("align","center").attr("style","text-align:center").html("<a class='syslab_a_click' style='cursor:pointer;'><i class='material-icons' style='color:blue;'>"+value_2+"</i></a>");
+                                        var t = typeof (value_2);
+                                        if(t != 'object'){
+                                            $(objTarget).attr("align","center").attr("style","text-align:center").html("<a class='syslab_a_click' style='cursor:pointer;'><i class='material-icons' style='color:blue;'>"+value_2+"</i></a>");
+                                        }else{
+                                            $(objTarget).attr("align","center").attr("style","text-align:center").html("<a class='syslab_a_click' style='cursor:pointer;'>"+(value_2.length==2?params.cellData:value_2[2])+"&nbsp;</span><i class='material-icons' style='color:blue;'>"+value_2[0]+"</i></a>");
+                                        }
                                         break;
                                     case "_click":
                                         $(objTarget).children().click(function(){
@@ -2053,8 +2166,8 @@ jQuery.extend({
      * @returns {undefined}
      */
     sys_error_handler : function(error){
-        console.log("Error name: "+error.name);
-        console.log("Error message: "+error.message);
+        console.log("Error name: >> "+error.name);
+        console.log("Error message: >> "+error.message);
         console.log(error);
     },
     

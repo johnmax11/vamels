@@ -1,5 +1,5 @@
 <!-- START FOOTER -->
-    <footer class="page-footer teal">
+    <footer class="page-footer {{Config::get('syslab.style_background')}}">
       <div class="container">
           &copy <?php echo @date('Y'); ?> {!! Config::get('syslab.title_clean') !!} 
           {!! Config::get('syslab.version') !!} - 
@@ -72,4 +72,4 @@
     
     <script type="text/javascript" src="{{Config::get('syslab.path_url_web')}}/js/_helpers/uploader-1.0/js/sy_uploaderFiles.js"></script>
     <!-- include javascript local view -->
-    <script type="text/javascript" src="{{Config::get('syslab.path_url_web')}}/getfilejs/views/js/{{$furl}}"></script>
+    <script type="text/javascript" src="{{Config::get('syslab.path_url_web')}}/getfilejs/app/views/js/{{$furl}}"></script>

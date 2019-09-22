@@ -4,7 +4,7 @@
     <header id="header" class="page-topbar">
       <!-- start header nav-->
       <div class="navbar-fixed">
-        <nav class="navbar-color teal">
+        <nav class="navbar-color {{Config::get('syslab.style_background')}}">
             <div class="nav-wrapper">
                 <ul class="right hide-on-med-and-down">
                     <li>

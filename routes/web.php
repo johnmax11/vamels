@@ -30,11 +30,6 @@ Route::get('404', function(){
 
 Route::group(array('middleware' => 'web','before' => 'auth'), function(){
     
-    /*Route::get('app/home/main/read', function(){
-         return View::make('app.home.prMain.readMain');
-    });*/
-    
-    
     // rutas modulo Home
     ////////// ruta main
     $strR = substr(url()->current(),strpos(url()->current(),"public")+7);
@@ -42,6 +37,7 @@ Route::group(array('middleware' => 'web','before' => 'auth'), function(){
     switch(count($arrRoute)){
         case 4:
         case 5:
+        case 6:
             //insert track user
             (new App\SyClass\System\Users(null,null))->createTrack();
             
@@ -54,7 +50,6 @@ Route::group(array('middleware' => 'web','before' => 'auth'), function(){
                 return redirect('errors.routeinvalid');
             }
             
-            
             break;
         case 3:
             // carga de archivos js sistema
@@ -63,7 +58,7 @@ Route::group(array('middleware' => 'web','before' => 'auth'), function(){
             
             break;
         case 2:
-        case 6:
+        case 7:
             // carga de archivos js sistema
             require app_path("Http/Controllers/App/Sys_process/prFiles/_factory/routesRegister.php");
             (new routesRegister());

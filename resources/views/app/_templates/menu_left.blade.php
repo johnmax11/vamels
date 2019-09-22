@@ -1,6 +1,6 @@
 <!-- START LEFT SIDEBAR NAV-->
     <aside id="left-sidebar-nav" class="nav-expanded nav-lock nav-collapsible">
-        <div class="brand-sidebar teal">
+        <div class="brand-sidebar {{Config::get('syslab.style_background')}}">
             <h1 class="logo-wrapper">
                 <a href="{{Config::get('syslab.path_url_web')}}/app/home/main/read" class="brand-logo darken-1">
                     <img src="{{Config::get('syslab.path_url_web')}}/images/logo_full.png" alt="{{Config::get('syslab.title')}} logo">

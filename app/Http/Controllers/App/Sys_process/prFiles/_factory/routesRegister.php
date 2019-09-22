@@ -17,7 +17,7 @@ class routesRegister{
         );
         /////// retorna el contenido de un file js del sistema
         Route::get(
-                "getfilejs/views/js/{module}/{action}/{file}",
+                "getfilejs/app/views/js/{module}/{action}/{file}",
                 [
                     "uses"=>Utilities::getPathFileClean(__FILE__)."\\readFilesController@getFileJsResources",
                     "as"=>null,

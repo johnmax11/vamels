@@ -99,6 +99,7 @@ class Security {
             switch (count($arrRout)){
                 case 4:
                 case 5:
+                case 6:
                     // sacamos los datos del module
                     $arrDModule = (new FacCRUD(new \App\SyModels\SysSecurityAccessModules()))
                                         ->read(array(array('name',$arrRout[1])));

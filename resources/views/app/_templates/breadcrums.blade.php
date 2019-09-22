@@ -1,6 +1,6 @@
 @if($datosRecurso['module'] != "home")
     <nav id="navBreadCrums">
-        <div class="nav-wrapper teal accent-4">
+        <div class="nav-wrapper {{Config::get('syslab.style_background')}} accent-4">
             <div class="col s12">
                 
                 <span class="breadcrumb">

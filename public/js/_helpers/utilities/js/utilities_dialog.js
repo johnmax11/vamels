@@ -77,19 +77,15 @@ jQuery.extend({
         var html = "";
         html += '<!-- Modal -->';
         html += '<div class="modal modal-fixed-footer" id="myModalAlertDialog_'+args.id+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">';
-        html += '   <div class="modal-dialog '+args.sizeClass+'" role="document">';
-        html += '       <div class="modal-content">';
-        html += '           <div class="modal-header">';
-        html += '               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-        html += '               <h4 class="modal-title" id="myModalLabel">'+args.tittle+'</h4>';
-        html += '           </div>';
-        html += '           <div class="modal-body">';
-        html += '               <span id="body-'+args.id+'" style="font-family:verdana;">'+(typeof args.message === 'function'?args.message():args.message)+'</span>';
-        html += '           </div>';
-        html += '           <div class="modal-footer">';
-        html += '               <button type="button" id="bttnClose_'+args.id+'" class="bttnClose_'+args.id+' btn btn-indervalle" data-dismiss="modal"><span class="fa fa-check-circle-o"></span> '+args.lblClose+'</button>';
-        html += '           </div>';
+        html += '   <div class="modal-content '+args.sizeClass+'" role="document">';
+        html += '       <h4 class="modal-title" id="myModalLabel" style="">'+args.tittle+'</h4>';
+        html += '       <hr/>';
+        html += '       <div class="modal-body">';
+        html += '           <span id="body-'+args.id+'" style="font-family:verdana;">'+(typeof args.message === 'function'?args.message():args.message)+'</span>';
         html += '       </div>';
+        html += '   </div>';
+        html += '   <div class="modal-footer">';
+        html += '      <button type="button" id="bttnClose_'+args.id+'" class="bttnClose_'+args.id+' modal-action modal-close waves-effect waves-green btn-flat" data-dismiss="modal"> '+args.lblClose+'</button>';
         html += '   </div>';
         html += '</div>';
         //

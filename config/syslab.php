@@ -11,4 +11,5 @@ return [
     "recaptcha"=>false,
     "url_powered_by"=>"",
     "powered_by"=>" - ",
+    "style_background"=>"green",
 ];
