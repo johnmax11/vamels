@@ -65,11 +65,13 @@
     <script type="text/javascript" src="{{Config::get('syslab.path_url_web')}}/getfilejs/footer.js"></script>
     <script type="text/javascript" src="{{Config::get('syslab.path_url_web')}}/getfilejs/menu_left.js"></script>
     
-    <!-- plugins adicionales -->
-    <link href="{{Config::get('syslab.path_url_web')}}/js/_helpers/materialize-admin-4.0/materialize-admin/vendors/data-tables/css/jquery.dataTables.min.css" type="text/css" rel="stylesheet">
-    <!-- data-tables -->
-    <script type="text/javascript" src="{{Config::get('syslab.path_url_web')}}/js/_helpers/materialize-admin-4.0/materialize-admin/vendors/data-tables/js/jquery.dataTables.min.js"></script>
-    
-    <script type="text/javascript" src="{{Config::get('syslab.path_url_web')}}/js/_helpers/uploader-1.0/js/sy_uploaderFiles.js"></script>
+    <!-- include javascript extra script -->
+    <?php
+        if(isset($arrExtraScript)){
+            for($i=0;$i<count($arrExtraScript);$i++){
+                echo $arrExtraScript[$i];
+            }
+        }
+    ?>
     <!-- include javascript local view -->
     <script type="text/javascript" src="{{Config::get('syslab.path_url_web')}}/getfilejs/app/views/js/{{$furl}}"></script>

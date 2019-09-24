@@ -1,15 +1,24 @@
 <?php
-namespace App\Facades;
-namespace App\Facades\App;
+namespace App\SyClass\App;
+use \App\SyClass\DB\FacCRUD;
+use \App\SyModels;
 /**
  * @author john jairo cortes garcia <johnmax11@hotmail.com>
  * @created_at 26-08-2017
  */
-class FacClients{
+class Clients{
     
-    private $_orClass;
-    public function __construct($orClass){
-        $this->_orClass = $orClass;
+    private $_interfaceResponse;
+    
+    /**
+     * 
+     * @param type $objInterfaceResponse
+     */
+    public function __construct($objInterfaceResponse) {
+        // verificamos si hay interface de respuesta
+        if($objInterfaceResponse != null){
+            $this->_interfaceResponse = $objInterfaceResponse;
+        }
     }
     
     /**
@@ -41,7 +50,7 @@ class FacClients{
     public function getClientsByAutoComplete($strSearch){
         try{
             //////// buscamos por codigo producto
-            $objFacCrud = new \App\Facades\FacCRUD(new \Clients());
+            $objFacCrud = new FacCRUD(new SyModels\Clients());
             $arrDCli = $objFacCrud->read(
                 array(array('name','LIKE',"%".$strSearch."%")),
                 null,
@@ -53,7 +62,7 @@ class FacClients{
             /////// verificamos si hay resultados
             if(count($arrDCli) == 0){
                 // buscamos por el nombre producto
-                $objFacCrud = new \App\Facades\FacCRUD(new \Clients());
+                $objFacCrud = new FacCRUD(new SyModels\Clients());
                 $arrDCli = $objFacCrud->read(
                     array(array('phone','LIKE',"%".$strSearch."%")),
                     null,
@@ -63,8 +72,20 @@ class FacClients{
                 );
             }
             
+            $nr = count($arrDCli);
+            $arrRsp = array();
+            for($i=0; $i<$nr ;$i++){
+                $arrRsp[$i] = new \stdClass();
+                
+                $arrRsp[$i]->value = $arrDCli[$i]->name;
+                $arrRsp[$i]->data[] = array(
+                    "id"=>$arrDCli[$i]->id,
+                    "phone"=>$arrDCli[$i]->phone,
+                );
+            }
+            
             // set response
-            return $this->_orClass->callBackResponse($arrDCli);
+            return $this->_interfaceResponse->callBackResponse(array("rows"=>$arrRsp), false, "not-alert");
         } catch (\Exception $ex) {
             throw $ex;
         }

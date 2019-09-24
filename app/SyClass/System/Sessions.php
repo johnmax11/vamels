@@ -37,7 +37,7 @@ class Sessions {
             \Session::put('name_security_roles_id', $arrDataRoles->id);
             \Session::put('name_security_roles', $arrDataRoles->name);
             // consultamos los datos de account data
-            $arrDAccData = (new AccountData(\Auth::user()->id))->getAccountData();
+            $arrDAccData = (new AccountData(\Auth::user()->id, null))->getAccountData();
             // set data session
             \Session::put('account_data_id',$arrDAccData[0]->id);
             \Session::put('photo_profile',$arrDAccData[0]->photo_profile);

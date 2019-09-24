@@ -1,16 +1,15 @@
 <?php
 namespace App\Http\Controllers\App\Box\prSales;
+
 use Illuminate\Routing\Controller;
 use App\SyClass\Helpers\Utilities;
 use App\SyClass\Helpers\Response;
 use App\SyClass\System\Security;
 use App\SyClass\System\Interfaces\InterfaceResponse;
-
 class readSalesController extends Controller
                         implements InterfaceResponse{
 
     private $_objResponse;
-    private $_objFvs;
     
     public function __construct() {}
     

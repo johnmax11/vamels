@@ -464,4 +464,27 @@ class Utilities{
         }
     }
     
+        /**
+     * validar campos
+     * 
+     * @return type
+     * @throws \Exception
+     */
+    static function validate($reglas, $alias){
+        try{
+            $validar = \Validator::make(\Request::all(), $reglas)->setAttributeNames($alias);
+            if($validar->fails()){
+                return $this->_objResponse->json(
+                        array(
+                            'msgResponseFirst'=>"Error validando campos",
+                            'msgResponseDetails'=>$this->_objResponse->orderDetails($validar->getMessageBag()->toArray(),'error')
+                        ),true,"warning");
+            }
+            
+            return null;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+    
 }

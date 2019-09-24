@@ -12,15 +12,26 @@
  * @author johnm
  */
 namespace App\SyClass\System;
+use \App\SyClass\DB\FacCRUD;
+
 class AccountData {
     //put your code here
     
     private $_idUser;
     private $_arrDataAccount;
-    public function __construct($idUser) {
-        $this->_idUser = $idUser;
-        // consultamos los datos de account data
-        $this->__getAccountDataByIdUser();
+    private $_interfaceResponse;
+    
+    public function __construct($idUser, $objInterfaceResponse) {
+        
+        if($idUser != null){
+            $this->_idUser = $idUser;
+            // consultamos los datos de account data
+            $this->__getAccountDataByIdUser();
+        }
+        // verificamos si hay interface de respuesta
+        if($objInterfaceResponse != null){
+            $this->_interfaceResponse = $objInterfaceResponse;
+        }
     }
     
     /**
@@ -44,9 +55,27 @@ class AccountData {
      */
     private function __getAccountDataByIdUser(){
         try{
-            
-            $obj = (new \App\SyClass\DB\FacCRUD(new \App\SyModels\SysAccountData()));
+            $obj = (new FacCRUD(new \App\SyModels\SysAccountData()));
             $this->_arrDataAccount = $obj->read(array(array('users_id',$this->_idUser)));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+    
+    /**
+     * retorna los porfiles de los usuarios existentes
+     * 
+     * @return type
+     * @throws \Exception
+     */
+    public function getDataProfiles(){
+        try{
+            // consultamos todos los profiles
+            $objFacAccD = (new FacCRUD(new \App\SyModels\SysAccountData()));
+            $arrDataAccData = $objFacAccD->read(array(array("id",">",0)));
+            
+            // set response
+            return $this->_interfaceResponse->callBackResponse(array("rows"=>$arrDataAccData), false, "not-alert");
         } catch (\Exception $ex) {
             throw $ex;
         }

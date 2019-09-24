@@ -1475,7 +1475,8 @@ jQuery.extend({
             },
             aaSorting: [],
             hiddenColumns : [],
-            bttnNotRows:true
+            bttnNotRows:true,
+            footerTotal:[]
         }, args);
         
         var objDt = null;
@@ -1616,7 +1617,7 @@ jQuery.extend({
             
             // recorremos los totala footer
             for(var k=0;k<footerTotal.length;k++){
- 
+                
                 // Remove the formatting to get integer data for summation
                 var intVal = function ( i ) {
                     return typeof i === 'string' ?
@@ -1640,7 +1641,7 @@ jQuery.extend({
                     .reduce( function (a, b) {
                         return intVal(a) + intVal(b);
                     }, 0 );
-
+                
                 // Update footer
                 $( api.column( footerTotal[k][0] ).footer() ).html(
                     footerTotal[k][2]+$.sy_number_format(pageTotal) +' ( '+footerTotal[k][2]+ $.sy_number_format(total) +' total)'
@@ -1978,11 +1979,30 @@ jQuery.extend({
      * @param {type} id
      * @returns {undefined}
      */
-    sy_getTableDataTable : function(id){
+    sy_getTableDataTable : function(id,footer,columns){
         var str = "";
         str += "<table id='tbl-"+id+"' class='display responsive-table nowrap' cellpadding='0' cellspacing='0' border='0' width='100%'>";
         str += "    <thead id='thead-"+id+"'>";
         str += "    </thead>";
+        if(footer.length>0){
+            str += "<tfoot>";
+            str += "    <tr>";
+            if(footer.length==1){
+                str += "        <th colspan='"+footer[0][0]+"' style='text-align:right'>Total:</th>";
+                str += "        <th colspan='"+footer[0][1]+"' style='text-align:left'></th>";
+            }else{
+                for(var k=0;k<columns.length;k++){
+                    var cols = '';
+                    if(k == columns.length-1){
+                        cols = 'colspan="2"';
+                    }
+                    str += "    <th style='text-align:center' "+cols+"></th>";
+                }
+            }
+            
+            str += "    </tr>";
+            str += "</tfoot>";
+        }
         str += "</table>";
         
         return str;

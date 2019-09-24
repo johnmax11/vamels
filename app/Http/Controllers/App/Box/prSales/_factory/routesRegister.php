@@ -9,7 +9,7 @@ class routesRegister{
         Route::get(
                 "app/box/sales/create",
                 [
-                    "uses"=>Utilities::getPathFileClean(__FILE__)."\\create"."Sales"."Controlle@"."main",
+                    "uses"=>Utilities::getPathFileClean(__FILE__)."\\create"."Sales"."Controller@"."main",
                     "as"=>null,
                     "middleware"=>["auth","permissionrole"],
                     "where"=>[],

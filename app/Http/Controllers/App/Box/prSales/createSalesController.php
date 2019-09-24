@@ -1,16 +1,18 @@
 <?php
 namespace App\Http\Controllers\App\Box\prSales;
+
 use Illuminate\Routing\Controller;
+use App\SyClass\Helpers\Utilities;
+use App\SyClass\Helpers\Response;
+use App\SyClass\System\Security;
+use App\SyClass\System\Interfaces\InterfaceResponse;
+
 class createSalesController extends Controller
-                        implements \App\Facades\IntResponseController{
+                        implements InterfaceResponse{
 
     private $_objResponse;
-    private $_objFvs;
     
-    public function __construct() {
-        $this->_objFvs = new \App\Facades\FacVerifySession();
-        $this->_objResponse = new \App\Helpers\ResponseCustom();
-    }
+    public function __construct() {}
     
     /**
      * methodo main de retorno del view
@@ -19,12 +21,8 @@ class createSalesController extends Controller
     */
     public function main(){
         try{
-            // verificamos session
-            if(!$this->_objFvs->verifySessionRol()){
-                return $this->_objFvs->getProcessError();
-            }
-            return \View::make(\Utilities::getCleanView(__NAMESPACE__))
-                    ->with('datosRecurso',$this->_objFvs->getRecursoArray());
+            return \View::make(Utilities::getCleanView(__NAMESPACE__))
+                        ->with('datosRecurso',(new Security())->readDataRecursosView(__NAMESPACE__));
         } catch (\Exception $ex) {
             throw $ex;
         }
