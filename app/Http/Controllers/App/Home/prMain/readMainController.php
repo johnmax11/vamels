@@ -24,7 +24,16 @@ class readMainController extends Controller
     */
     public function main(){
         try{
+            $arrDTask = null;
+            // verificamos si es testigo
+            if(\Auth::user()->security_roles_id == 1){
+                // consultamos las tareas pendientes por hacer
+                $arrDTask = (new \App\SyClass\App\Witnesses(null, $this))
+                    ->getTasks();
+            }
+            
             return \View::make(Utilities::getCleanView(__NAMESPACE__))
+                    ->with('arrDTask',$arrDTask)
                     ->with('datosRecurso',(new Security())->readDataRecursosView(__NAMESPACE__));
         } catch (\Exception $ex) {
             throw $ex;

@@ -28,7 +28,7 @@
     <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
     <link href="{{Config::get('syslab.path_url_web')}}/js/_helpers/materialize-admin-4.0/materialize-admin/vendors/perfect-scrollbar/perfect-scrollbar.css" type="text/css" rel="stylesheet">
   </head>
-  <body class="green">
+  <body class="{{Config::get('syslab.style_background')}}">
     <!-- Start Page Loading -->
     <div id="loader-wrapper">
         <div id="loader"></div>
@@ -43,7 +43,7 @@
                 <div class="row">
                     <div class="input-field col s12 center">
                         <img src="{{Config::get('syslab.path_url_web')}}/images/logo_full.png" alt="" class="circle responsive-img valign profile-image-login">
-                        <p class="center login-form-text">{{Config::get('syslab.title')}}</p>
+                        <p class="center login-form-text">{{Config::get('syslab.title')}} {{Config::get('syslab.version')}}</p>
                     </div>
                 </div>
                 @if(\Session::has('error'))
@@ -71,7 +71,7 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <button type="submit" class="btn green waves-effect waves-light col s12">Ingresar</button>
+                        <button type="submit" class="btn {{Config::get('syslab.style_background_bttn')}} waves-effect waves-light col s12">Ingresar</button>
                     </div>
                 </div>
                 <div class="row">

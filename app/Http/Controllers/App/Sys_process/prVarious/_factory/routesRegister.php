@@ -7,7 +7,7 @@ class routesRegister{
         // rutas update
         // rutas delete
         /////// actualiza varios procesos del sistema
-        Route::post(
+        Route::put(
                 "app/sys_process/various/update/process",
                 [
                     "uses"=>Utilities::getPathFileClean(__FILE__)."\\updateVariousController@executeProcess",

@@ -166,8 +166,9 @@ class TmpMiscelaneos {
         try{
             $objFacCrud = new FacCRUD(new SyModels\SysTmpMiscelaneos());
             $dataImg = $objFacCrud->read(array(
-                array('syslab_session_id',$syslab_ses_id),
-                array('parameters',$parameters)
+                array('syslab_session_id',\Session::get('sys_users_income_id')),
+                array('parameters',$parameters),
+                array('sys_users_id',$syslab_ses_id)
             ));
             
             if(count($dataImg)>0){

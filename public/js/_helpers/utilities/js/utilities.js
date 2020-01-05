@@ -185,13 +185,13 @@ jQuery.extend({
     sy_getTypeHead : function(url){
         var arrUrl = url.split("/");
         /**verificamos a cual pertenece*/
-        if(jQuery.inArray("create",arrUrl) != -1){
+        if(jQuery.inArray("update",arrUrl) != -1){
             return "PUT";
         }else{
             if(jQuery.inArray("read",arrUrl) != -1){
                 return "GET"
             }else{
-                if(jQuery.inArray("update",arrUrl) != -1){
+                if(jQuery.inArray("create",arrUrl) != -1){
                     return "POST"
                 }else{
                     if(jQuery.inArray("delete",arrUrl) != -1){
@@ -1227,11 +1227,12 @@ jQuery.extend({
         var arrStr = [];
         var strmsj = "";
         $.sy_removerClassValidate(objForm);
-        objForm.find('.validate').each(function() {
+        objForm.find('.verify').each(function() {
             if(this.nodeName == "INPUT" || this.nodeName == "SELECT"){
                 var elemento = this;
                 // separamos las palabras //
                 arrStr = $.sy_separarPalabras(elemento.id.substring(3));
+                
                 // validamos que el campo no este vacio //
                 if (jQuery.trim(elemento.value) == '') {
                     bolvalidate = false;
@@ -1246,6 +1247,7 @@ jQuery.extend({
                         }
                     }
                 }
+                
                 // validamos los tipo email
                 if ($(this).attr('type') == 'email' && $.sy_test_rex($(this), $.sy_rexp_validate_email()) == false) {
                     bolvalidate = false;
@@ -1253,6 +1255,7 @@ jQuery.extend({
                     $(this).addClass("validate-error");
                     $(this).next().addClass("validate-error-text");
                 }
+                
                 //validamos type number
                 if ($(this).attr('type') == 'number' && $.sy_test_rex($(this), $.sy_rex_validate_numeros_positivos_enteros()) == false) {
                     bolvalidate = false;
@@ -1265,7 +1268,10 @@ jQuery.extend({
         });
         //agregamos el div d error
         if(!bolvalidate){
-            $.sy_addDivError("orange darken-3","Formulario con errores",strmsj,target_paint_error);
+            // Materialize.toast(message, displayLength, className, completeCallback);
+            Materialize.toast('Alguna informaci&oacute;n no anda bien, revisela :)', 4000) // 4000 is the duration of the toast
+            //
+            $.sy_addDivError("orange darken-3","Formulario con advertencias de validación",strmsj,target_paint_error);
         }
         return bolvalidate;
     },
@@ -1280,7 +1286,7 @@ jQuery.extend({
      */
     sy_removerClassValidate : function(form) {
         $('#divMsgPrincipal').remove();
-        $(form).find('.validate').each(function() {
+        $(form).find('.verify').each(function() {
             if(this.nodeName == "INPUT"){
                 $(this).removeClass("validate-error");
                 $(this).next().removeClass("validate-error-text");
@@ -1578,10 +1584,10 @@ jQuery.extend({
             );
             /**reemplzamos el tmp*/
             if(args.bttnPlus!= null && args.bttnPlus.visible!=undefined && args.bttnPlus.visible==true){
-               $.sy_getBttnPlus(args.id,'teal');
+               $.sy_getBttnPlus(args.id,'blue');
             }
             if(args.bttnList!= null && args.bttnList.visible!=undefined && args.bttnList.visible==true){
-               $.sy_getBttnList(args.id,'teal');
+               $.sy_getBttnList(args.id,'blue');
             }
             /*event responsive*/
             /*objDt.on( 'click', 'tr.child li a', function () {
@@ -1855,9 +1861,9 @@ jQuery.extend({
                                     case "_icon":
                                         var t = typeof (value_2);
                                         if(t != 'object'){
-                                            $(objTarget).attr("align","center").attr("style","text-align:center").html("<a class='syslab_a_click' style='cursor:pointer;'><i class='material-icons' style='color:blue;'>"+value_2+"</i></a>");
+                                            $(objTarget).attr("align","center").attr("style","text-align:center").html("<a class='syslab_a_click' style='cursor:pointer;'><i class='material-icons' style='color:red;'>"+value_2+"</i></a>");
                                         }else{
-                                            $(objTarget).attr("align","center").attr("style","text-align:center").html("<a class='syslab_a_click' style='cursor:pointer;'>"+(value_2.length==2?params.cellData:value_2[2])+"&nbsp;</span><i class='material-icons' style='color:blue;'>"+value_2[0]+"</i></a>");
+                                            $(objTarget).attr("align","center").attr("style","text-align:center").html("<a class='syslab_a_click' style='cursor:pointer;'>"+(value_2.length==2?params.cellData:value_2[2])+"&nbsp;</span><i class='material-icons' style='color:red;'>"+value_2[0]+"</i></a>");
                                         }
                                         break;
                                     case "_click":

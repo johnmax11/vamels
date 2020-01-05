@@ -27,55 +27,6 @@ class routesRegister{
                 ]
         );
         
-        /////// retorna el contenido de una imagen del evento
-        Route::get(
-                "imgevent/{idevento}/{imagen}",
-                [
-                    "uses"=>Utilities::getPathFileClean(__FILE__)."\\readFilesController@getFileImagenEvento",
-                    "as"=>null,
-                    "middleware"=>[],
-                    "where"=>[],
-                    "domain"=>null
-                ]
-        );
-        
-        /////// retorna el contenido del video
-        Route::get(
-                "videos/videos_sponsor/{video}",
-                [
-                    "uses"=>Utilities::getPathFileClean(__FILE__)."\\readFilesController@getFileVideoSponsor",
-                    "as"=>null,
-                    "middleware"=>[],
-                    "where"=>[],
-                    "domain"=>null
-                ]
-        );
-        
-        /////// retorna el contenido de una imagen del evento
-        Route::get(
-                "upload/images_upload/{imagen}",
-                [
-                    "uses"=>Utilities::getPathFileClean(__FILE__)."\\readFilesController@getFileImagenUploadEvento",
-                    "as"=>null,
-                    "middleware"=>[],
-                    "where"=>[],
-                    "domain"=>null
-                ]
-        );
-        
-        /////// retorna el contenido de una imagen de sponsor
-        Route::get(
-                "imgspon/img_spon/{imagen}",
-                [
-                    "uses"=>Utilities::getPathFileClean(__FILE__)."\\readFilesController@getFileImagenSponsor",
-                    "as"=>null,
-                    "middleware"=>[],
-                    "where"=>[],
-                    "domain"=>null
-                ]
-        );
-        
-        
         // rutas update
         // rutas delete
         

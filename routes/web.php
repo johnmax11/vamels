@@ -28,7 +28,7 @@ Route::get('404', function(){
     return View::make('errors.404');
 });
 
-Route::group(array('middleware' => 'web','before' => 'auth'), function(){
+Route::group(array(['middleware' => ['web']],'before' => 'auth'), function(){
     
     // rutas modulo Home
     ////////// ruta main
@@ -38,11 +38,7 @@ Route::group(array('middleware' => 'web','before' => 'auth'), function(){
         case 4:
         case 5:
         case 6:
-            //insert track user
-            (new App\SyClass\System\Users(null,null))->createTrack();
-            
             if(file_exists(app_path("Http/Controllers/App/".ucfirst($arrRoute[1])."/pr".ucfirst($arrRoute[2])."/_factory/routesRegister.php"))){
-            
                 // include del file de routes q se necesita
                 require app_path("Http/Controllers/App/".ucfirst($arrRoute[1])."/pr".ucfirst($arrRoute[2])."/_factory/routesRegister.php");
                 (new routesRegister());

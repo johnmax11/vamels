@@ -1,6 +1,8 @@
 /****/
-(function ($){
-    $.fn.uploaderFiles = function(args){
+(function ($, window, document, undefined){
+    var pluginName = 'uploaderFiles';
+    var objElement = null;
+    $.fn[pluginName] = function(args){
         args = jQuery.extend({
             url:$.sy_pathUrl("sys_tmpmiscelaneos/tmpmiscelaneos/upload/filegeneric"),
             sizeMax:10,//megas,
@@ -16,6 +18,7 @@
             data:{},
             autoHide: false,
             hideTimeout:false,
+            imgSuccess:"up",
             
             _obj:null
         }, args);
@@ -82,10 +85,12 @@
          */
         _updateProgress = function (evt) {
             if (evt.lengthComputable) {
+                
                 var percentComplete = (parseFloat(evt.loaded / evt.total)*100).toFixed(2);
+                console.log(percentComplete+"->"+$(_getObj()).prop('id'));
                 /**remove preload*/
                 $('#iPreload-'+$(_getObj()).prop('id')).html(percentComplete+'%');
-                
+                args.$_updateProgress(_getObj(), percentComplete);
             } else {
                 // Unable to compute progress information since the total size is unknown
             }
@@ -103,10 +108,10 @@
             args.$_transferComplete(evt,evt.target.responseText);
             if (evt.target.readyState==4 && evt.target.status==200){
                 // File(s) uploaded
-                args.$_transferAfterCompleteReady(evt,evt.target.responseText);
+                args.$_transferAfterCompleteReady(evt,evt.target.responseText, _getObj(), $(_getObj()).prop('id'));
                 _customMsgStatus(evt.target.responseText);
             } else {
-                args.$_transferAfterCompleteError(evt,evt.target.responseText);
+                args.$_transferAfterCompleteError(evt, evt.target.responseText ,_getObj());
                 var stError = _getMsjError(evt);
                 _addDivStatus("orange darken-3","Error al cargar el archivo",stError);
                 
@@ -165,8 +170,9 @@
          */
         _transferStart = function(evt){
             /***/
-            args.$_transferStart(evt);
+            args.$_transferStart(evt, _getObj());
             /**set image de preload*/
+            $("#succ-"+$(_getObj()).prop('id')).hide();
             $('#imgPreload-'+$(_getObj()).prop('id')).remove();
             if($(_getObj()).next().children().children().length>0){
                 $(_getObj()).next().children().children().append('<span id="imgPreload-'+$(_getObj()).prop('id')+'" >&nbsp;<i class="fa fa-cog fa-spin fa-lg" style="vertical-align: baseline;"></i>&nbsp;<i id="iPreload-'+$(_getObj()).attr('id')+'">0%</i></span>');
@@ -203,12 +209,11 @@
          * @returns {undefined}
          */
         _setEventObj = function(obj){
-            $(obj).change(function(){
-                /**validamos*/
-                _setObj(this);
-                var obj2 = [this];
+            /**validamos*/
+            _setObj(obj.element);
+            $(obj.element).change(function(){
                 args.objUpload = this;
-                
+                var obj2 = [this];
                 if(_validateUpload(obj2)){
                     if(args.autoUpload){
                         /*trigger de upload file*/
@@ -267,12 +272,14 @@
          * @returns {Boolean}
          */
         _validateExtension = function(objFile){
-            var ext = objFile.name.split('.').pop().toLowerCase();
-            if($.inArray(ext, args.arrExt) == -1) {
+            var arrExtAccept = $(_getObj()).attr("accept").split(",");
+            var ext = "."+objFile.name.split('.').pop().toLowerCase();
+            
+            if($.inArray(ext, arrExtAccept) == -1) {
                 _addDivStatus(
                         "orange darken-3",
                         "Imposible cargar el archivo",
-                        'Extension permitidas: ['+args.arrExt+']'
+                        'Extension permitidas: ['+arrExtAccept+']'
                     );
                 return false;
             }
@@ -317,6 +324,25 @@
          * @param {type} msjS
          */
         _addDivStatus = function(cla,msjP,msjS){
+            $("#error-"+$(_getObj()).prop('id')).remove();
+            if(cla == "teal"){
+                if(args.imgSuccess == "up"){
+                    $("#succ-"+$(_getObj()).prop('id')).show(500,'');
+                }else{
+                    
+                }
+            }else{
+                $("#succ-"+$(_getObj()).prop('id')).hide();
+                var element = $(_getObj()).parent().next().children()[0];
+                //$(element).addClass("invalid");
+                setTimeout(function(){
+                    $(element).attr("class","file-path validate invalid");
+                },250);
+                
+                $(element).after('<div class="errorTxt1"><div id="error-'+$(_getObj()).prop('id')+'" class="error">'+msjS+'</div></div>')
+            }
+            return;
+            
             $('#divStateUpload-'+$(_getObj()).prop('id')).remove();
             var stE = '';
             stE += "<div id='divStateUpload-"+$(_getObj()).prop('id')+"' class='card-panel "+cla+"'>";
@@ -348,16 +374,16 @@
                 
             }
             setTimeout(function(){
-                $('#divStateUpload-'+$(_getObj()).prop('id')).remove();
+                //$('#divStateUpload-'+$(_getObj()).prop('id')).remove();
             },10000);
         };
         
         _setObj = function(obj){
-            args._obj = obj;
+            this.objElement = obj;
         };
         
         _getObj = function(){
-            return args._obj;
+            return this.objElement;
         };
         
         /**
@@ -377,10 +403,44 @@
         
         /***/
         function main(obj){
-            this._setEventObj(obj);
+            (new _setEventObj(obj));
         }
-        /* ini uploader**/
-        main(this);
+        
+        
+        // The actual plugin constructor
+        function Plugin( element, options ) {
+            this.element = element;
+
+            // jQuery has an extend method that merges the 
+            // contents of two or more objects, storing the 
+            // result in the first object. The first object 
+            // is generally empty because we don't want to alter 
+            // the default options for future instances of the plugin
+            this.options = $.extend( {}, args, options) ;
+
+            this._defaults = args;
+            this._name = pluginName;
+
+            this.init();
+        }
+
+        Plugin.prototype.init = function () {
+            // Place initialization logic here
+            // You already have access to the DOM element and
+            // the options via the instance, e.g. this.element 
+            // and this.options
+            
+            /* ini uploader**/
+            new main(this);
+            
+        };
+
+        
+        return this.each(function () {
+            if (!$.data(this, 'plugin_' + pluginName)) {
+                $.data(this, 'plugin_' + pluginName,new Plugin( this, args ));
+            }
+        }); 
     };
    
-})(jQuery);
+})(jQuery, window, document);

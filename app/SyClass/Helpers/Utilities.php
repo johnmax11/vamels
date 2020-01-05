@@ -394,7 +394,7 @@ class Utilities{
     
     static function setSessionTokenUpdate($id){
         try{
-            $token = \Utilities::RandomString()."$".$id."$".\Utilities::RandomString();
+            $token = Utilities::RandomString()."$".$id."$".Utilities::RandomString();
             \Session::put($token,$token);
             return $token;
         } catch (\Exception $ex) {
@@ -472,12 +472,12 @@ class Utilities{
      */
     static function validate($reglas, $alias){
         try{
-            $validar = \Validator::make(\Request::all(), $reglas)->setAttributeNames($alias);
+            $validar = \Validator::make(\Request::all(), $reglas, $alias)->setAttributeNames($alias);
             if($validar->fails()){
-                return $this->_objResponse->json(
+                return (new Response())->responseRequest(
                         array(
                             'msgResponseFirst'=>"Error validando campos",
-                            'msgResponseDetails'=>$this->_objResponse->orderDetails($validar->getMessageBag()->toArray(),'error')
+                            'msgResponseDetails'=>(new Response())->orderDetails($validar->getMessageBag()->toArray(),'error')
                         ),true,"warning");
             }
             

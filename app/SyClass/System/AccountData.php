@@ -68,14 +68,18 @@ class AccountData {
      * @return type
      * @throws \Exception
      */
-    public function getDataProfiles(){
+    public function getDataProfiles($rJson = true){
         try{
             // consultamos todos los profiles
             $objFacAccD = (new FacCRUD(new \App\SyModels\SysAccountData()));
             $arrDataAccData = $objFacAccD->read(array(array("id",">",0)));
             
-            // set response
-            return $this->_interfaceResponse->callBackResponse(array("rows"=>$arrDataAccData), false, "not-alert");
+            if($rJson){
+                // set response
+                return $this->_interfaceResponse->callBackResponse(array("rows"=>$arrDataAccData), false, "not-alert");
+            }else{
+                return $arrDataAccData;
+            }
         } catch (\Exception $ex) {
             throw $ex;
         }

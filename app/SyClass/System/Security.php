@@ -75,6 +75,7 @@ class Security {
                 'n_module'=>$arrDModule[0]->name_alias,
                 'n_action'=>$arrDPrograms[0]->name_alias,
                 'icon'=>$arrDPrograms[0]->icon_image,
+                'back_bttn'=>$arrDPrograms[0]->button_back,
                 'short_description'=>$arrDPrograms[0]->short_description,
             );
             

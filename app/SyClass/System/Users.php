@@ -25,18 +25,33 @@ class Users {
      * @return type
      */
     public function __construct($idUSer,$objInterfaceResponse) {
-        $this->_idUser = $idUSer;
         
         // verificamos si el valor es diferente a null
-        if($this->_idUser != null){
-            return (new FacCRUD(new \App\SyModels\SysUsers($this->_idUser)));
+        if($idUSer != null){
+            $this->_idUser = $idUSer;
         }
+        
         // verificamos si hay interface de respuesta
         if($objInterfaceResponse != null){
             $this->_interfaceResponse = $objInterfaceResponse;
         }
     }
     
+    /**
+     * retorna el objetc del user
+     * 
+     * @return type
+     * @throws \Exception
+     */
+    public function getObject(){
+        try{
+            return (new FacCRUD(new \App\SyModels\SysUsers($this->_idUser)));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+
     /**
      * agrega registro en el track del usuario
      * 
@@ -47,8 +62,11 @@ class Users {
         try{
             (new FacCRUD(new \App\SyModels\SysUsersTrack()))
                 ->create((object)array(
+                    'sys_users_income_id'=>session('sys_users_income_id'),
                     'url_track'=>\Request::url(),
-                    'ip_address'=>\Request::getClientIp()
+                    'ip_address'=>\Request::getClientIp(),
+                    'request_data'=>serialize($_REQUEST),
+                    'request_headers'=>serialize(\Request::header())
                 ));
             return true;
         } catch (\Exception $ex) {
@@ -66,7 +84,7 @@ class Users {
             (new FacCRUD(new \App\SyModels\SysUsersIncome()))
                 ->update(
                         (object)array("timestamp_exit" => @date('Y-m-d H:i:s')),
-                        (object)array("id" => \Session::get('users_income_id')
+                        (object)array("id" => \Session::get('sys_users_income_id')
                 ));
             return $this->_interfaceResponse->callBackResponse();
         } catch (\Exception $ex) {

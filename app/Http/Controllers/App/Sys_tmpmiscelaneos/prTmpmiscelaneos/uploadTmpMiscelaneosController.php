@@ -29,7 +29,6 @@ class uploadTmpMiscelaneosController extends Controller
      */
     public function processUploadFileGeneric(){
         try{
-            
             $nameField = \Request::input("nameField");
 
             //if (\Request::hasFile('txtFile')){
@@ -40,8 +39,9 @@ class uploadTmpMiscelaneosController extends Controller
             // borramos todo lo de este user
             $objFacTmpMiscelaneos = new \App\SyClass\System\TmpMiscelaneos();
             $objFacTmpMiscelaneos->setDeleteTmpMiscelaneos(array(
-                array('syslab_session_id',\Auth::user()->id),
-                array('parameters',$nameField)
+                array('syslab_session_id',(\Session::get('sys_users_income_id')!=null ?\Session::get('sys_users_income_id') :null)),
+                array('parameters',$nameField),
+                array('sys_users_id',\Auth::user()->id)
             ));
             
             
@@ -78,7 +78,8 @@ class uploadTmpMiscelaneosController extends Controller
                 /**insertamos en la tabla tmp*/
                 $objFacTmpMiscelaneos = new \App\SyClass\System\TmpMiscelaneos();
                 $idLast = $objFacTmpMiscelaneos->setInsertTmpMiscelaneos((object)array(
-                    "syslab_session_id"=>\Auth::user()->id,
+                    "syslab_session_id"=>(\Session::get('sys_users_income_id')!=null ?\Session::get('sys_users_income_id') :null),
+                    "sys_users_id"=>\Auth::user()->id,
                     "data_principal"=>$nfile,
                     "data_secundario"=>$name,
                     "parameters"=>$nameField

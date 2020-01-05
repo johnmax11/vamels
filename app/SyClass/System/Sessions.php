@@ -29,7 +29,7 @@ class Sessions {
     public function InicializeSessionVariables($idUsIncome){
         try{
             // set data session
-            \Session::put('users_income_id',$idUsIncome);
+            \Session::put('sys_users_income_id',$idUsIncome);
             // sacamos los datos del rol de usuario
             $arrDataRoles = (new Roles())->getDataRoleByIdSecurityRole(\Auth::user()->security_roles_id);
             // set data session

@@ -31,19 +31,24 @@ class Response {
     public function responseRequest(
             $response = null,
             $error=false,
-            $type='success'){
+            $type='success'
+    ){
         try{
             if($response == null){
                 $response = array('msgResponseFirst'=>"Siii! Tu tranquilo, todo finalizo correctamente");
             }
             
-            // retorno
-            return \Response::json(
-                array(
-                    "msg"=>$response,
-                    "error"=>$error,
-                    "type_msg"=>$type
-            ));
+            if($type == "not-json"){
+                return $response;
+            }else{
+                // retorno
+                return \Response::json(
+                    array(
+                        "msg"=>$response,
+                        "error"=>$error,
+                        "type_msg"=>$type
+                ));
+            }
         } catch (\Exception $ex) {
             throw $ex;
         }

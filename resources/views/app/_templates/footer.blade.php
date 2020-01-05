@@ -1,7 +1,8 @@
 <!-- START FOOTER -->
     <footer class="page-footer {{Config::get('syslab.style_background')}}">
       <div class="container">
-          &copy <?php echo @date('Y'); ?> {!! Config::get('syslab.title_clean') !!} 
+          &copy <?php echo @date('Y'); ?> 
+          {!! Config::get('syslab.title_clean') !!} - <i>{!! Config::get('syslab.title_full') !!}</i>
           {!! Config::get('syslab.version') !!} - 
           Powered By&nbsp;
           <a href="" target="_blank" style="color: black;">Me</a>
